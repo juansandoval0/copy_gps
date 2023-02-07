@@ -156,6 +156,8 @@ void loop() {
   if (HomeSet == true) {
     DistanciaKm = gps.distanceBetween(gps.location.lat(), gps.location.lng(), LatHomeDuble, LongHomeDouble) / 1;
     for (int i = 0; i < 24; i++) {
+
+      // HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM 
       //leds[i] += CRGB::Blue; 
       //FastLED.show();
     }
