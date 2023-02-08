@@ -8,7 +8,7 @@
 #define DATA_PIN 16
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS 24
+#define NUM_LEDS 1
 CRGB leds[NUM_LEDS];
 #define BRIGHTNESS 96
 #define FRAMES_PER_SECOND 120
@@ -39,7 +39,7 @@ SoftwareSerial ss(RXPin, TXPin);
 void setup() {
 
   //inciar leds
-  delay(3000); 
+  delay(3000);
   FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(BRIGHTNESS);
 
@@ -67,7 +67,7 @@ void setup() {
 }
 
 void loop() {
-  
+
   Nsatelites = gps.satellites.value();
   Longitud = gps.location.lat();
   Latitud = gps.location.lng();
@@ -75,7 +75,7 @@ void loop() {
   Satelites = "Satelites :" + Nsatelites;
   SatelitesSTR = Nsatelites;
 
-  display.drawString(0, 0, "Satelites: " + SatelitesSTR);
+  display.drawString(0, 0, "Satelites: " + SatelitesSTR + "  Ciclos: " + Cont1);
   display.drawString(0, 12, "Long: " + Latitud + "- Lat: " + Longitud);
   display.drawString(0, 24, "m to Home: " + DistanciaKmString);
   display.drawString(0, 45, "Home: " + LonHome + " , " + LatHome);
@@ -123,7 +123,7 @@ void loop() {
   Serial.println();
   Serial.println(HomeSet);
   Serial.println(Nsatelites);
-    Serial.println(Cont1);
+  Serial.println(Cont1);
 
   smartDelay(550);
 
@@ -135,7 +135,7 @@ void loop() {
   //Guarda el punto de home despues de hacer 10 ciclos y asegurar que tenga mas de 5 satelites
   Cont1 = Cont1 + 1;
 
-  if (Cont1 >= 15 && Nsatelites >= 4 && HomeSet == false) {
+  if (Cont1 >= 20 && Nsatelites >= 3 && HomeSet == false) {
     LatHome = gps.location.lat();
     LonHome = gps.location.lng();
     LongHomeDouble = gps.location.lng();
@@ -144,16 +144,16 @@ void loop() {
   }
   if (HomeSet == true) {
     DistanciaKm = gps.distanceBetween(gps.location.lat(), gps.location.lng(), LatHomeDuble, LongHomeDouble) / 1;
-    for (int i = 0; i < 24; i++) {
 
-      // HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM 
-      //leds[i] += CRGB::Blue; 
-      //FastLED.show();
-    }
-    delay(10);
+    // HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM
+    leds[0] += CRGB::Blue;
+
+    delay(20);
+    FastLED.show();
   }
 
   display.clear();
+
 }
 
 // esperar a que el gps tenga senal
