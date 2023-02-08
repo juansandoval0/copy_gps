@@ -5,10 +5,10 @@
 #include <FastLED.h>
 
 //LEDS
-#define DATA_PIN 16
+#define DATA_PIN 15
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS 1
+#define NUM_LEDS 24
 CRGB leds[NUM_LEDS];
 #define BRIGHTNESS 96
 #define FRAMES_PER_SECOND 120
@@ -125,7 +125,7 @@ void loop() {
   Serial.println(Nsatelites);
   Serial.println(Cont1);
 
-  smartDelay(550);
+  smartDelay(200);
 
   if (millis() > 6000 && gps.charsProcessed() < 10) {
     Serial.println(F("No GPS data received: check wiring"));
@@ -135,7 +135,8 @@ void loop() {
   //Guarda el punto de home despues de hacer 10 ciclos y asegurar que tenga mas de 5 satelites
   Cont1 = Cont1 + 1;
 
-  if (Cont1 >= 20 && Nsatelites >= 3 && HomeSet == false) {
+  if (Cont1 >= 20 && Nsatelites >= 5 && HomeSet == false) {
+    delay(20);
     LatHome = gps.location.lat();
     LonHome = gps.location.lng();
     LongHomeDouble = gps.location.lng();
@@ -145,15 +146,32 @@ void loop() {
   if (HomeSet == true) {
     DistanciaKm = gps.distanceBetween(gps.location.lat(), gps.location.lng(), LatHomeDuble, LongHomeDouble) / 1;
 
-    // HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM HERE IS THE PROBLEM
-    leds[0] += CRGB::Blue;
+    FastLED.clear();
+    for (int i = 0; i < 24; i++) {
+      fadeToBlackBy(leds, NUM_LEDS, 90);
+      leds[i] += CHSV(96, 255, 192);
+      FastLED.delay(3000 / FRAMES_PER_SECOND);
+      FastLED.show();
+    }
+    for (int i = 24; i > 0; i--) {
+      fadeToBlackBy(leds, NUM_LEDS, 90);
+      leds[i] += CHSV(96, 255, 192);
+      FastLED.delay(3000 / FRAMES_PER_SECOND);
+      FastLED.show();
+    }
+    FastLED.clear();
 
-    delay(20);
-    FastLED.show();
+  } else {
+
+    FastLED.clear();
+    for (int i = 0; i < 24; i++) {
+      fadeToBlackBy(leds, NUM_LEDS, 90);
+      leds[i] += CHSV(0, 255, 192);
+      FastLED.delay(3000 / FRAMES_PER_SECOND);
+      FastLED.show();
+    }
   }
-
   display.clear();
-
 }
 
 // esperar a que el gps tenga senal
