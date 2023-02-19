@@ -1,3 +1,4 @@
 # Bike-GPS
- ESP-32
+ Basado en un ESP8266
+ 
  
